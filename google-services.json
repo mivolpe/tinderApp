@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "472157649847",
+    "project_id": "tinderapphelb",
+    "storage_bucket": "tinderapphelb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472157649847:android:3eb76a713432dbab694632",
+        "android_client_info": {
+          "package_name": "host.exp.exponent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472157649847-2i04a39pmlcitp658kbomb0triu89vau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAffKUWGSuup2xARHyE6p-FbMLUX0PmopE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472157649847-2i04a39pmlcitp658kbomb0triu89vau.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
