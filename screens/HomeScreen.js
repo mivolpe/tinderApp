@@ -6,8 +6,9 @@ import useAuth from '../hooks/useAuth';
 import tw from 'tailwind-rn';
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from '@firebase/firestore';
+import { collection, doc, DocumentSnapshot, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from '@firebase/firestore';
 import { db } from '../firebase';
+import generateId from '../lib/generateId';
 
 
 const HomeScreen = () => {
@@ -38,14 +39,14 @@ const HomeScreen = () => {
         );
 
         const passedUserIds = passes.length > 0 ? passes : ["test"];
-        const swipedUserIds = swipes.length > 0 ? passes : ["test"];
+        const swipedUserIds = swipes.length > 0 ? swipes : ["test"];
 
 
-        unsub = onSnapshot(query(collection(db,"users"),where("id", "not-in", [...passedUserIds, ...swipedUserIds])), snapshot => {
+        unsub = onSnapshot(query(collection(db,"users"),where("id", "not-in", [...passedUserIds, ...swipedUserIds])), (snapshot) => {
             setProfiles(
-                snapshot.docs.filter(doc => doc.id !== user.uid).map((doc) => ({
+                snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
                     id: doc.id,
-                    ...doc.data()
+                    ...doc.data(),
                 }))
             );
         });
@@ -55,19 +56,43 @@ const HomeScreen = () => {
     return unsub;
     }, [db]);
 
-    const swipeLeft = async() =>{
-        if(!proifles[cardIndex]) return;
+    const swipeLeft = async(cardIndex) =>{
+        if(!profiles[cardIndex]) return;
 
         const userSwiped = profiles[cardIndex];
         setDoc(doc(db, "users", user.uid, "passes", userSwiped.id),userSwiped);
     };
 
-    const swipeRight = async() =>{
-        if(!proifles[cardIndex]) return;
+    const swipeRight = async(cardIndex) =>{
+        if(!profiles[cardIndex]) return;
 
         const userSwiped = profiles[cardIndex];
-        setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id),userSwiped);
+        const loggedInProfile = await(await getDoc(doc(db, "users", user.uid))).data();
 
+        getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then((DocumentSnapshot) => {
+            if (DocumentSnapshot.exists()) {
+                
+                setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
+
+                setDoc(doc(db, "matches", generateId(user.uid, userSwiped.id)), {
+                    user: {
+                        [user.uid]: loggedInProfile,
+                        [userSwiped.id]: userSwiped
+                    },
+                    userMatched: [user.uid, userSwiped.id],
+                    timestamp: serverTimestamp(),
+                });
+
+                navigation.navigate("Match", {
+                    loggedInProfile,
+                    userSwiped,
+                });
+
+
+            } else {
+                setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id),userSwiped);
+            }
+        });
     };
 
     return (
@@ -143,7 +168,7 @@ const HomeScreen = () => {
                     }}
                     renderCard={(card) => card ? (
                         <View
-                            style={tw("bg-white-500 h-5/6 rounded-xl")}
+                            style={tw("bg-red-500 h-5/6 rounded-xl")}
                         >
                             <Image 
                                 style={tw("absolute top-0 h-full w-full rounded-xl")}
