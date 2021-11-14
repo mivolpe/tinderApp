@@ -103,14 +103,16 @@ const HomeScreen = () => {
                 <View
                     style={tw("flex-row items-center justify-between px-5")}
                 >
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => navigation.navigate("Modal")}
+                    >
                         <Image 
                             style={tw("h-10 w-10 rounded-full")} 
                             source={{ uri: user.photoURL }}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("Modal")}
+                        onPress={logout}
                     >
                         <Image
                             style={tw("h-14 w-14")}

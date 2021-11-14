@@ -7,11 +7,16 @@ import LoginScreen from './screens/LoginScreen';
 import MatchScreen from './screens/MatchScreen';
 import MessageScreen from './screens/MessageScreen';
 import ModalScreen from './screens/ModalScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import { LogBox } from 'react-native';
+
 
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
+    LogBox.ignoreAllLogs();//Ignore all log notifications
+
     const { user }= useAuth();
     return (
         <Stack.Navigator 
@@ -19,7 +24,6 @@ const StackNavigator = () => {
                 headerShown: false,
              }}
         >
-
             {user ? (
                 <>
                     <Stack.Group>
@@ -36,7 +40,10 @@ const StackNavigator = () => {
 
                 </>
             ) : (
-                <Stack.Screen name="Login" component={LoginScreen}/>
+                <>
+                    <Stack.Screen name="Login" component={LoginScreen}/>
+                    <Stack.Screen name="Register" component={RegisterScreen}/>
+                </>
             )}
         </Stack.Navigator>
     )
