@@ -13,13 +13,16 @@ const RegisterScreen = () => {
     const incompleteForm = !image || !job || !age;
 
     return (
-        <ScrollView style={tw("flex-1 ")}>
+        <ScrollView style={tw("flex-1 bg-red-400")}>
+
             <View style={tw("flex-1 items-center pt-1")}>
                 <Image
-                    style={tw("h-20 w-full")}
+                    style={tw("h-32 w-full")}
                     resizeMode="contain"
                     source={{ uri: "https://links.papareact.com/2pf" }}
                 />
+                <KeyboardAvoidingView
+                behavior="padding">
                 <TextInput
                     value={image}
                     onChangeText={setImage}
@@ -38,6 +41,25 @@ const RegisterScreen = () => {
                     style={tw("text-left border-b-2 text-xl pb-2 w-64 mb-8")}
                     placeholder="Enter Your Password"
                 />
+                                <TextInput
+                    value={image}
+                    onChangeText={setImage}
+                    style={tw("text-left border-b-2 text-xl pb-2 w-64 mb-8")}
+                    placeholder="Confirm your Password"
+                />
+                <TextInput
+                    value={image}
+                    onChangeText={setImage}
+                    keyboardType='numeric'
+                    style={tw("text-left border-b-2 text-xl pb-2 w-64 mb-8")}
+                    placeholder="Enter Your Age"
+                />
+                <TextInput
+                    value={image}
+                    onChangeText={setImage}
+                    style={tw("text-left border-b-2 text-xl pb-2 w-64 mb-8")}
+                    placeholder="Enter your Job"
+                />
                 <TouchableOpacity 
                     disabled={incompleteForm}
                     style={[
@@ -47,6 +69,7 @@ const RegisterScreen = () => {
                 >
                     <Text style={tw("text-center text-white text-xl")}>Register</Text>
                 </TouchableOpacity>
+                </KeyboardAvoidingView>
             </View>
         </ScrollView>
     )
