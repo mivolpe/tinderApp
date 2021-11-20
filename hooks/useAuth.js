@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as Google from "expo-google-app-auth";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut } from '@firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut } from '@firebase/auth';
 import { auth } from '../firebase';
 
 const AuthContext = createContext({});
@@ -55,11 +55,22 @@ export const AuthProvider = ({ children }) => {
         .finally(() => setLoading(false));
     };
 
+    const registerWithEmailPassword = async(email, password) => {
+        try{
+            createUserWithEmailAndPassword(auth, email, password)
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
     const memoedValue = useMemo(() => ({
         user,
         loading,
         error, 
         signInWithGoogle,
+        registerWithEmailPassword,
         logout, 
     }), [user, loading, error])
 
