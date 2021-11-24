@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react'
-import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView } from 'react-native'
+import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import tw from 'tailwind-rn'
 import useAuth from '../hooks/useAuth';
 
