@@ -3,32 +3,34 @@ import { View, Text, TouchableOpacity, Image} from 'react-native'
 import tw from 'tailwind-rn';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import ActionSheetPhoto from './ActionSheetPhoto';
 
 export default function UploadImage() {
 
     const [image, setImage] = useState(null)
+    const chooseGallCam = ActionSheetPhoto();
+
     const addImage = async () => {
-        let _image =  await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
-            MediaTypeOptions: "image",
-          });
+        chooseGallCam;
+        // let _image =  await ImagePicker.launchImageLibraryAsync({
+        //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        //     allowsEditing: true,
+        //     quality: 1,
+        //     MediaTypeOptions: "image",
+        //   });
 
-          console.log(JSON.stringify(_image));
-
-          if (!_image.cancelled) {
-            setImage(_image.uri);
-          }
+        //   if (!_image.cancelled) {
+        //     setImage(_image.uri);
+        //   }
     };
 
     return (  
         <TouchableOpacity
             onPress={addImage}
-            style={[tw("bg-gray-300 m-1 "), {width:100, height:100}]}
+            style={[tw("bg-gray-300 m-1 "), {width:100, height:120}]}
             >
             {
-            image  && <Image source={{ uri: image }} style={tw("h-32 w-24")} />
+            image  && <Image source={{ uri: image }} style={{width:100, height:120}} />
             }
             <AntDesign 
                 style={tw("items-center")} 
