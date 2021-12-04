@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as Google from "expo-google-app-auth";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signOut } from '@firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signInWithEmailAndPassword, signOut } from '@firebase/auth';
 import { auth } from '../firebase';
 
 const AuthContext = createContext({});
@@ -57,8 +57,15 @@ export const AuthProvider = ({ children }) => {
 
     const registerWithEmailPassword = async(email, password) => {
         try{
-            createUserWithEmailAndPassword(auth, email, password)
+            await createUserWithEmailAndPassword(auth,email, password)
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
+    const loginWithEmailPassword = async(email, password) => {
+        try{
+            signInWithEmailAndPassword(auth,email,password);
         } catch (e) {
             console.log(e);
         }
@@ -71,6 +78,7 @@ export const AuthProvider = ({ children }) => {
         error, 
         signInWithGoogle,
         registerWithEmailPassword,
+        loginWithEmailPassword,
         logout, 
     }), [user, loading, error])
 

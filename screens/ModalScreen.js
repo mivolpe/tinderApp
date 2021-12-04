@@ -10,17 +10,17 @@ import useAuth from '../hooks/useAuth';
 const ModalScreen = () => {
     const { user } = useAuth();
     const navigation = useNavigation();
-    const [image, setImage] = useState(null);
     const [job, setJob] = useState(null);
     const [age, setAge] = useState(null);
+    const [name, setName] = useState(null);
 
-    const incompleteForm = !image || !job || !age;
+
+    const incompleteForm =!job || !age;
 
     const updateUserProfile = () => {
         setDoc(doc(db, 'users', user.uid), {
             id: user.uid,
-            displayName: user.displayName,
-            photoURL: image,
+            displayName: name,
             job: job,
             age: age,
             timestamp: serverTimestamp(),
@@ -33,7 +33,7 @@ const ModalScreen = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={tw("flex-1 items-center pt-1")}>
+        <ScrollView contentContainerStyle={tw("flex-1")}>
             <View style={tw("flex-1 items-center pt-1")}>
                 <Image
                     style={tw("h-20 w-full")}
@@ -42,20 +42,30 @@ const ModalScreen = () => {
                 />
 
                 <Text style={tw("text-xl text-gray-500 p-2 font-bold")}>
-                    Welcome {user.displayName}
+                    Update your profile
                 </Text>
 
                 <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                    Step 1: The Profile Pic
+                    Step 1: The Pics
+                </Text>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("UploadImages")}
+                >
+                    <Text style={tw("font-bold bg-red-400 text-white p-4 border-2 text-xl rounded-lg")}>
+                        upload Images
+                    </Text>
+                </TouchableOpacity>
+                <Text style={tw("text-center p-4 font-bold text-red-400")}>
+                    Step 2: The name
                 </Text>
                 <TextInput
-                    value={image}
-                    onChangeText={setImage}
+                    value={name}
+                    onChangeText={setName}
                     style={tw("text-center text-xl pb-2")}
-                    placeholder="Enter a Profile Pic URL"
+                    placeholder="Enter your name"
                 />
                 <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                    Step 2: The Job
+                    Step 3: The Job
                 </Text>
                 <TextInput
                     value={job}
@@ -64,12 +74,12 @@ const ModalScreen = () => {
                     placeholder="Enter your occupation"
                 />
                 <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                    Step 3: The Age
+                    Step 4: The Age
                 </Text>
                 <TextInput
                     value={age}
                     onChangeText={setAge}
-                    style={tw("text-center text-xl pb-2")}
+                    style={tw("text-center text-xl pb-2 mb-10")}
                     placeholder="Enter your age"
                     keyboardType="numeric"
                     maxLength={2}
@@ -77,7 +87,7 @@ const ModalScreen = () => {
                 <TouchableOpacity 
                     disabled={incompleteForm}
                     style={[
-                        tw("w-64 p-3 rounded-xl absolute bottom-10"),
+                        tw("w-64 p-3 rounded-xl"),
                         incompleteForm ? tw("bg-gray-400") : tw("bg-red-400"),
                     ]}
                     onPress={updateUserProfile}

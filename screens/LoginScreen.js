@@ -47,7 +47,7 @@ const LoginScreen = () => {
                 >
                     <Text 
                         style={tw("font-semibold text-center")}
-                        onPress={() => navigation.navigate("UploadImages")}
+                        onPress={() => navigation.navigate("Register")}
                     > 
                         Login with Email
                     </Text>
