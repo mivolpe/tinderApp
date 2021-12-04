@@ -26,7 +26,7 @@ const RegisterScreen = () => {
             age: age,
             timestamp: serverTimestamp(),
         }).then(() => {
-            navigation.navigate("Home")
+            navigation.navigate("UploadImages")
         })
         .catch(error => {
             alert(error.message);
@@ -89,7 +89,7 @@ const RegisterScreen = () => {
                         ]}
                         onPress= {registerUser}
                     >
-                        <Text style={tw("text-center text-white text-xl")}>Register</Text>
+                        <Text style={tw("text-center text-white text-xl")}>Next</Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
             </View>
