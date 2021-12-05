@@ -1,6 +1,6 @@
 import { doc, serverTimestamp, setDoc } from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import tw from 'tailwind-rn';
 import { db } from '../firebase';
@@ -13,6 +13,14 @@ const ModalScreen = () => {
     const [job, setJob] = useState(null);
     const [age, setAge] = useState(null);
     const [name, setName] = useState(null);
+    const [place, setPlace] = useState();
+    const [longitude, setLongitude] = useState();
+    const [latitude, setLatitude] = useState();
+
+
+    useEffect(() => {
+        getDataUrl();
+    })
 
 
     const incompleteForm =!job || !age;
@@ -23,6 +31,9 @@ const ModalScreen = () => {
             displayName: name,
             job: job,
             age: age,
+            place: place,
+            longitude: longitude,
+            latitude: latitude,
             timestamp: serverTimestamp(),
         }).then(() => {
             navigation.navigate("Home")
@@ -30,6 +41,30 @@ const ModalScreen = () => {
         .catch(error => {
             alert(error.message);
         });
+    };
+
+    const getDataUrl = async() =>{
+        const response = await fetch('https://api.ipify.org/?format=json');
+        const json = await response.json();
+        const access_key = "8df8693d3be27799699bb687eaba85aa";
+        fetch("http://api.ipstack.com/"+json.ip + "?access_key="+access_key,{
+            method: "GET",
+        })
+            .then((response) => response.json())
+            //If response is in json then in success
+            .then((responseJson) => {
+                //Success
+                console.log(responseJson);
+                setPlace(responseJson.city);
+                setLatitude(responseJson.latitude);
+                setLongitude(responseJson.longitude)
+            })
+            //If response is not in json then in error
+            .catch((error) => {
+                //Error
+                alert(JSON.stringify(error));
+                console.error(error);
+            });
     };
 
     return (

@@ -51,12 +51,13 @@ export default function UploadImage({image, setImage, index}) {
                 {
                 image !==''  && <Image source={{ uri: image }} style={{width:100, height:120}} />
                 }
-                <AntDesign 
+                {image ? <></> : <AntDesign
                     style={tw("items-center m-1")} 
                     name="plus" 
                     size={90} 
                     color="gray"
                 />
+                }
                 <View style={tw("absolute bottom-0 items-center m-1")}>
                     <Text style={tw("font-bold")}>{image ? '' : 'Upload Image'}</Text>
                 </View>

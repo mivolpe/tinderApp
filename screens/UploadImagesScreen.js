@@ -4,17 +4,27 @@ import UploadImage from '../components/UploadImage'
 import tw from 'tailwind-rn'
 import * as ImagePicker from 'expo-image-picker';
 import useAuth from '../hooks/useAuth';
-import { storage } from '../firebase';
-
-
+import {collection, doc, getDoc, getDocs, setDoc} from "@firebase/firestore";
+import {db} from "../firebase";
 
 const UploadImagesScreen = () => {
     useEffect(() => {
         checkForCameraRollPermission()
+        checkImgUser()
       }, []);
 
     const { user } = useAuth();
-    const [images, setImages] = useState(Array.from({length: 9}, (_) => ''));
+    const [images, setImages] = useState(["","","","","","","","",""]);
+
+    const checkImgUser = async() =>{
+        let index = 0;
+        let imgRef = await getDocs(collection(db,"users",user.uid, "images"));
+        imgRef.forEach((doc) => {
+            setImage(doc.data().imageUrl, index);
+            index++;
+        })
+    }
+
 
 
     const  checkForCameraRollPermission=async()=>{
@@ -36,17 +46,17 @@ const UploadImagesScreen = () => {
 
   const uploadImage = async() => {
     console.log(images)
+      let number = 1;
     images.forEach(element => {
-      if (element != ""){
-        const uploadUri = element;
-        let filename = uploadUri.substring(uploadUri.lastIndexOf('/')+1)
-        try{
-          const imgref = ref(storage, filename)
-        } catch(e) {
-          console.log(e)
+        if(!! element) {
+            setDoc(doc(db, "users", user.uid, "images", "images"+number), {
+                imageUrl : element
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+            number++;
         }
-      }
-
     });
 
   }

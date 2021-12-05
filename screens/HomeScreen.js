@@ -10,11 +10,13 @@ import { collection, doc, DocumentSnapshot, getDoc, getDocs, onSnapshot, query, 
 import { db } from '../firebase';
 import generateId from '../lib/generateId';
 
-
 const HomeScreen = () => {
     const navigation = useNavigation();
     const { user,logout } = useAuth();
     const [profiles, setProfiles] = useState([]);
+    const [latitude, setLatitude] = useState()
+    const [longitude, setLongitude] = useState()
+
     const swipeRef = useRef(null);
 
    useLayoutEffect(() => {
@@ -26,8 +28,9 @@ const HomeScreen = () => {
    }, []);
 
    useEffect(() => {
+       getUserinfo()
     let unsub;
-    
+
     const fetchCards = async () => {
 
         const passes = await getDocs(collection(db, "users", user.uid, "passes")).then(
@@ -71,7 +74,7 @@ const HomeScreen = () => {
 
         getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then((DocumentSnapshot) => {
             if (DocumentSnapshot.exists()) {
-                
+
                 setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
 
                 setDoc(doc(db, "matches", generateId(user.uid, userSwiped.id)), {
@@ -95,6 +98,32 @@ const HomeScreen = () => {
         });
     };
 
+    const getUserinfo = async() =>{
+        const userRef = doc(db,"users",user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()){
+            const {latitude,longitude} = userSnap.data();
+            setLatitude(latitude);
+            setLongitude(longitude);
+        }
+    }
+
+    const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Radius of the earth in km
+        const dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        const dLon = deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c; // Distance in km
+        return d.toFixed(0);
+    };
+    const deg2rad = (angle) => {
+        return angle * (Math.PI / 180);
+    };
+
     return (
         <SafeAreaView
             style={tw("flex-1")}
@@ -106,8 +135,8 @@ const HomeScreen = () => {
                     <TouchableOpacity
                     onPress={() => navigation.navigate("Modal")}
                     >
-                        <Image 
-                            style={tw("h-10 w-10 rounded-full")} 
+                        <Image
+                            style={tw("h-10 w-10 rounded-full")}
                             source={{ uri: user.photoURL }}
                         />
                     </TouchableOpacity>
@@ -122,7 +151,7 @@ const HomeScreen = () => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate("Chat")}
                     >
-                        <Ionicons 
+                        <Ionicons
                             name='chatbubbles'
                             size={30}
                             color="#FF5864"
@@ -172,7 +201,7 @@ const HomeScreen = () => {
                         <View
                             style={tw("bg-red-500 h-5/6 rounded-xl")}
                         >
-                            <Image 
+                            <Image
                                 style={tw("absolute top-0 h-full w-full rounded-xl")}
                                 source={{ uri: card.photoURL }}
                             />
@@ -181,13 +210,13 @@ const HomeScreen = () => {
                                     <Text style={tw("text-xl font-bold text-white")}>
                                         {card.displayName}
                                     </Text>
-                                    <Text> job </Text>
-                                    <Text> 
-                                        <Ionicons 
+                                    <Text> {card.job} </Text>
+                                    <Text>
+                                        <Ionicons
                                             name='location'
-                                            size={16} 
+                                            size={16}
                                         />
-                                        distance 
+                                        {card.place} {getDistance(latitude,longitude,card.latitude,card.longitude)} km
                                     </Text>
                                 </View>
                                 <Text style={tw("text-xl px-3 text-white")}>
@@ -216,19 +245,19 @@ const HomeScreen = () => {
                 />
             </View>
             <View style={tw("flex flex-row justify-evenly bottom-4")}>
-                <TouchableOpacity 
+                <TouchableOpacity
                     onPress={() => swipeRef.current.swipeLeft()}
                     style={tw("items-center justify-center rounded-full w-16 h-16 bg-red-200")}
                 >
                     <Entypo name="cross"  size={30} color="red" />
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                     onPress={() => swipeRef.current.swipeRight()}
                     style={tw("items-center justify-center rounded-full w-16 h-16 bg-green-200")}
                 >
                     <AntDesign name="heart" size={30} color="green" />
                 </TouchableOpacity>
-            </View>               
+            </View>
             {/* End of Cards */}
         </SafeAreaView>
     );

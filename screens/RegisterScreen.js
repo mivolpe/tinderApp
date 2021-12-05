@@ -17,18 +17,6 @@ const RegisterScreen = () => {
 
     const registerUser = (() => {
         registerWithEmailPassword(email, password);
-        // setDoc(doc(db, 'users', user.uid), {
-        //     id: user.uid,
-        //     displayName: name,
-        //     job: job,
-        //     age: age,
-        //     timestamp: serverTimestamp(),
-        // }).then(() => {
-        //     navigation.navigate("UploadImages")
-        // })
-        // .catch(error => {
-        //     alert(error.message);
-        // });
     })
 
     const loginUser = (() => {
