@@ -9,13 +9,19 @@ import Swiper from 'react-native-deck-swiper';
 import { collection, doc, DocumentSnapshot, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from '@firebase/firestore';
 import { db } from '../firebase';
 import generateId from '../lib/generateId';
+import requestUser from '../services/RequestUser'
+import { LogBox } from 'react-native';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
-    const { user,logout } = useAuth();
+    const { user,logout, registerWithEmailPassword } = useAuth();
     const [profiles, setProfiles] = useState([]);
     const [latitude, setLatitude] = useState()
     const [longitude, setLongitude] = useState()
+    const [image, setImage] = useState()
+
+    LogBox.ignoreLogs(['Setting a timer']);
+    LogBox.ignoreLogs(['AsyncStorage has been extracted from ']);
 
     const swipeRef = useRef(null);
 
@@ -28,7 +34,9 @@ const HomeScreen = () => {
    }, []);
 
    useEffect(() => {
-       getUserinfo()
+       (async() => {
+           await getUserinfo()
+       })();
     let unsub;
 
     const fetchCards = async () => {
@@ -100,11 +108,17 @@ const HomeScreen = () => {
 
     const getUserinfo = async() =>{
         const userRef = doc(db,"users",user.uid);
+        const userImgRef = doc(db,"users",user.uid,"images","images1");
         const userSnap = await getDoc(userRef);
+        const userImgSnap = await getDoc(userImgRef);
         if (userSnap.exists()){
-            const {latitude,longitude} = userSnap.data();
-            setLatitude(latitude);
-            setLongitude(longitude);
+            const {lat,lon} = userSnap.data();
+            setLatitude(lat);
+            setLongitude(lon);
+        }
+        if (userImgSnap.exists()){
+            const {imageUrl} = userImgSnap.data();
+            setImage(imageUrl)
         }
     }
 
@@ -124,6 +138,10 @@ const HomeScreen = () => {
         return angle * (Math.PI / 180);
     };
 
+    const createUser = async() =>{
+        requestUser.getUser(registerWithEmailPassword)
+    }
+
     return (
         <SafeAreaView
             style={tw("flex-1")}
@@ -137,7 +155,7 @@ const HomeScreen = () => {
                     >
                         <Image
                             style={tw("h-10 w-10 rounded-full")}
-                            source={{ uri: user.photoURL }}
+                            source={{ uri: image }}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -203,25 +221,26 @@ const HomeScreen = () => {
                         >
                             <Image
                                 style={tw("absolute top-0 h-full w-full rounded-xl")}
-                                source={{ uri: card.photoURL }}
+                                source={{ uri: card.photoUrl }}
                             />
-                            <View style={tw("absolute bottom-0 flex-row justify-between bg-transparent h-20 px-5")}>
+                            <View style={tw("absolute bottom-10 flex-row justify-between bg-transparent h-20 px-5")}>
                                 <View>
                                     <Text style={tw("text-xl font-bold text-white")}>
                                         {card.displayName}
                                     </Text>
+                                    <Text style={tw("text-xl text-white")}>
+                                        {card.age}
+                                    </Text>
                                     <Text> {card.job} </Text>
-                                    <Text>
+                                    <Text style={tw("text-lg font-black text-white")}>
                                         <Ionicons
                                             name='location'
                                             size={16}
                                         />
-                                        {card.place} {getDistance(latitude,longitude,card.latitude,card.longitude)} km
+                                        {card.place} {getDistance(latitude,longitude,card.lat,card.lon)} km
                                     </Text>
                                 </View>
-                                <Text style={tw("text-xl px-3 text-white")}>
-                                     23
-                                </Text>
+
                             </View>
 
                         </View>

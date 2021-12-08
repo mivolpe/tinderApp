@@ -24,11 +24,11 @@ const MatchScreen = () => {
             <View style={tw("flex-row justify-evenly mt-5")}>
                 <Image
                     style={tw("h-32 w-32 rounded-full")}
-                    source={{ uri: loggedInProfile.photoURL, }}
+                    source={{ uri: loggedInProfile.photoUrl, }}
                 />
                 <Image
                     style={tw("h-32 w-32 rounded-full")}
-                    source={{ uri: userSwiped.photoURL, }}
+                    source={{ uri: userSwiped.photoUrl, }}
                 />
             </View>
             <TouchableOpacity

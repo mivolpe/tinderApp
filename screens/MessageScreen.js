@@ -36,7 +36,7 @@ const MessageScreen = () => {
             timestamp: serverTimestamp(),
             userId: user.uid,
             displayName: user.displayName,
-            photoURL: matchDetails.user[user.uid].photoURL,
+            photoUrl: matchDetails.user[user.uid].photoUrl,
             message: input,
         });
         setInput("");
@@ -47,9 +47,7 @@ const MessageScreen = () => {
             <Header title={getMatchedUserInfo(matchDetails.user, user.uid).displayName}/>
 
             <KeyboardAvoidingView
-            behavior={Platform.OS ==="android" ? "padding" : "height"}
             style={tw("flex-1")}
-            keyboardVerticalOffset={10}
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <FlatList

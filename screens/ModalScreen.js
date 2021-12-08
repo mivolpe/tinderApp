@@ -1,40 +1,64 @@
-import { doc, serverTimestamp, setDoc } from '@firebase/firestore';
+import {doc, getDoc, serverTimestamp, setDoc} from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import tw from 'tailwind-rn';
 import { db } from '../firebase';
 import useAuth from '../hooks/useAuth';
+import getPosUser from "../services/GetPosUser";
 
 
 const ModalScreen = () => {
     const { user } = useAuth();
     const navigation = useNavigation();
-    const [job, setJob] = useState(null);
-    const [age, setAge] = useState(null);
-    const [name, setName] = useState(null);
+    const [job, setJob] = useState();
+    const [age, setAge] = useState();
+    const [name, setName] = useState();
     const [place, setPlace] = useState();
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
+    const [profilePicture, setProfilePicture] = useState()
 
 
     useEffect(() => {
-        getDataUrl();
-    })
+        (async() => {
+            await getDataUrl()
+            await UserprofileInfo()
+        })();
+    },[])
 
 
-    const incompleteForm =!job || !age;
+    const incompleteForm = !name || !job || !age;
 
-    const updateUserProfile = () => {
+    const UserprofileInfo = async() => {
+        const userRef = doc(db,"users",user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()){
+            const {displayName,age,job,photoUrl} = userSnap.data();
+            setProfilePicture(photoUrl)
+            setName(displayName)
+            setAge(age)
+            setJob(job)
+        }
+    }
+
+    const updateUserProfile = async () => {
+        const userRef = doc(db,"users",user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()){
+            const {photoUrl} = userSnap.data();
+            setProfilePicture(photoUrl)
+
+        }
         setDoc(doc(db, 'users', user.uid), {
             id: user.uid,
             displayName: name,
             job: job,
             age: age,
+            photoUrl : profilePicture,
             place: place,
-            longitude: longitude,
-            latitude: latitude,
-            timestamp: serverTimestamp(),
+            lon: longitude,
+            lat: latitude,
         }).then(() => {
             navigation.navigate("Home")
         })
@@ -43,29 +67,13 @@ const ModalScreen = () => {
         });
     };
 
-    const getDataUrl = async() =>{
-        const response = await fetch('https://api.ipify.org/?format=json');
-        const json = await response.json();
-        const access_key = "8df8693d3be27799699bb687eaba85aa";
-        fetch("http://api.ipstack.com/"+json.ip + "?access_key="+access_key,{
-            method: "GET",
-        })
-            .then((response) => response.json())
-            //If response is in json then in success
-            .then((responseJson) => {
-                //Success
-                console.log(responseJson);
-                setPlace(responseJson.city);
-                setLatitude(responseJson.latitude);
-                setLongitude(responseJson.longitude)
-            })
-            //If response is not in json then in error
-            .catch((error) => {
-                //Error
-                alert(JSON.stringify(error));
-                console.error(error);
-            });
-    };
+     const getDataUrl = async() =>{
+         const {city, lat, lon} = await getPosUser.getDataUrl();
+         setPlace(city);
+         setLatitude(lat);
+         setLongitude(lon);
+     }
+
 
     return (
         <ScrollView contentContainerStyle={tw("flex-1")}>

@@ -6,23 +6,31 @@ import * as ImagePicker from 'expo-image-picker';
 import useAuth from '../hooks/useAuth';
 import {collection, doc, getDoc, getDocs, setDoc} from "@firebase/firestore";
 import {db} from "../firebase";
+import {useNavigation} from "@react-navigation/core";
 
 const UploadImagesScreen = () => {
     useEffect(() => {
-        checkForCameraRollPermission()
-        checkImgUser()
+        (async() =>{
+            await checkForCameraRollPermission()
+            await checkImgUser()
+        })();
       }, []);
 
     const { user } = useAuth();
     const [images, setImages] = useState(["","","","","","","","",""]);
+    const navigation = useNavigation();
+
 
     const checkImgUser = async() =>{
         let index = 0;
+        const array = []
         let imgRef = await getDocs(collection(db,"users",user.uid, "images"));
         imgRef.forEach((doc) => {
-            setImage(doc.data().imageUrl, index);
+            array.push(doc.data().imageUrl)
+
             index++;
         })
+        setImages(prev => [...array,...prev.slice(array.length)])
     }
 
 
@@ -45,9 +53,8 @@ const UploadImagesScreen = () => {
   }
 
   const uploadImage = async() => {
-    console.log(images)
-      let number = 1;
-    images.forEach(element => {
+        let number = 1;
+        images.forEach(element => {
         if(!! element) {
             setDoc(doc(db, "users", user.uid, "images", "images"+number), {
                 imageUrl : element
@@ -57,6 +64,13 @@ const UploadImagesScreen = () => {
             });
             number++;
         }
+        if (!!element && number === 2) {
+            setDoc(doc(db, "users", user.uid), {
+                id: user.uid,
+                photoUrl: element,
+            })
+        }
+        navigation.navigate("Modal")
     });
 
   }
