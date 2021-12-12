@@ -22,6 +22,7 @@ const RegisterScreen = () => {
     const { registerWithEmailPassword, loginWithEmailPassword } = useAuth(); 
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
+    const [type,setType] = useState(null);
 
     const registerUser = (() => {
         registerWithEmailPassword(email, password);
@@ -37,7 +38,17 @@ const RegisterScreen = () => {
         <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={LoginSchema}
-            onSubmit={values => loginWithEmailPassword(values.email,values.password)}
+            onSubmit=
+            {   values => 
+             { if(type === "register")
+                {
+                    registerWithEmailPassword(values.email,values.password)
+                } else
+                {
+                    loginWithEmailPassword(values.email,values.password)
+                }
+             }
+            }
         >
             {( props ) => (
                 <ScrollView style={tw("flex-1")}>
@@ -82,7 +93,12 @@ const RegisterScreen = () => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={tw("w-64 p-3 rounded-xl bottom-0 bg-white")}
-                                onPress= {props.handleSubmit}
+                                onPress= {()=> 
+                                    {
+                                        props.handleSubmit , 
+                                        setType("register")
+                                    }
+                                }
                             >
                                 <Text
                                     style={tw("text-center text-white text-xl text-red-400")}>
