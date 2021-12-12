@@ -28,6 +28,9 @@ const ChatRow = ({ matchDetails }) => {
                 style={tw("rounded-full h-16 w-16 mr-4")}
                 source={{ uri: matchedUserInfo?.photoUrl }}
             />
+            <Text>
+                {matchedUserInfo.displayName}
+            </Text>
         </TouchableOpacity>
     )
 }
