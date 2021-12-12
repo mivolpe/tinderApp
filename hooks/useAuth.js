@@ -65,8 +65,9 @@ export const AuthProvider = ({ children }) => {
 
     const loginWithEmailPassword = async(email, password) => {
         try{
-            signInWithEmailAndPassword(auth,email,password);
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (e) {
+            alert("Invalid email or password")
             console.log(e);
         }
     }
