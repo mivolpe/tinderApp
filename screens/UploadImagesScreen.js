@@ -68,9 +68,9 @@ const UploadImagesScreen = () => {
             setDoc(doc(db, "users", user.uid), {
                 id: user.uid,
                 photoUrl: element,
-            })
+            }).then(navigation.navigate("Modal"))
         }
-        navigation.navigate("Modal")
+
     });
 
   }

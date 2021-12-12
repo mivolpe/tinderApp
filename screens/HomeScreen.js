@@ -11,6 +11,7 @@ import { db } from '../firebase';
 import generateId from '../lib/generateId';
 import requestUser from '../services/RequestUser'
 import { LogBox } from 'react-native';
+import {useIsFocused} from "@react-navigation/native";
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -25,6 +26,8 @@ const HomeScreen = () => {
 
     const swipeRef = useRef(null);
 
+    const isFocused = useIsFocused()
+
    useLayoutEffect(() => {
         onSnapshot(doc(db, "users", user.uid), snapshot => {
             if (!snapshot.exists()){
@@ -34,44 +37,46 @@ const HomeScreen = () => {
    }, []);
 
    useEffect(() => {
-       (async() => {
-           await getUserinfo()
-       })();
-    let unsub;
+       if(isFocused) {
 
-    const fetchCards = async () => {
+           let unsub;
 
-        const passes = await getDocs(collection(db, "users", user.uid, "passes")).then(
-            (snapshot) => snapshot.docs.map((doc) => doc.id)
-        );
+           const fetchCards = async () => {
 
-        const swipes = await getDocs(collection(db, "users", user.uid, "swipes")).then(
-            (snapshot) => snapshot.docs.map((doc) => doc.id)
-        );
+               const passes = await getDocs(collection(db, "users", user.uid, "passes")).then(
+                   (snapshot) => snapshot.docs.map((doc) => doc.id)
+               );
 
-        const passedUserIds = passes.length > 0 ? passes : ["test"];
-        const swipedUserIds = swipes.length > 0 ? swipes : ["test"];
+               const swipes = await getDocs(collection(db, "users", user.uid, "swipes")).then(
+                   (snapshot) => snapshot.docs.map((doc) => doc.id)
+               );
+
+               const passedUserIds = passes.length > 0 ? passes : ["test"];
+               const swipedUserIds = swipes.length > 0 ? swipes : ["test"];
 
 
-        unsub = onSnapshot(query(collection(db,"users"),where("id", "not-in", [...passedUserIds, ...swipedUserIds])), (snapshot) => {
-            setProfiles(
-                snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }))
-            );
-        });
-    };
+               unsub = onSnapshot(query(collection(db, "users"), where("id", "not-in", [...passedUserIds, ...swipedUserIds])), (snapshot) => {
+                   setProfiles(
+                       snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
+                           id: doc.id,
+                           ...doc.data(),
+                       }))
+                   );
+               });
+           };
 
-    fetchCards();
-    return unsub;
-    }, [db]);
+           fetchCards().then((async () => {
+               await getUserinfo()
+           })());
+           return unsub;
+       }
+    }, [db,isFocused]);
 
     const swipeLeft = async(cardIndex) =>{
         if(!profiles[cardIndex]) return;
 
         const userSwiped = profiles[cardIndex];
-        setDoc(doc(db, "users", user.uid, "passes", userSwiped.id),userSwiped);
+        await setDoc(doc(db, "users", user.uid, "passes", userSwiped.id), userSwiped);
     };
 
     const swipeRight = async(cardIndex) =>{
@@ -139,7 +144,7 @@ const HomeScreen = () => {
     };
 
     const createUser = async() =>{
-        requestUser.getUser(registerWithEmailPassword)
+        await requestUser.getUser(registerWithEmailPassword)
     }
 
     return (

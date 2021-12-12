@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth';
 import getPosUser from "../services/GetPosUser";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {useIsFocused} from "@react-navigation/native";
 
 const ModalSchema = Yup.object().shape({
     name: Yup.string()
@@ -35,14 +36,18 @@ const ModalScreen = () => {
     const [longitude, setLongitude] = useState();
     const [latitude, setLatitude] = useState();
     const [profilePicture, setProfilePicture] = useState()
-
+    const isFocused = useIsFocused();
 
     useEffect(() => {
-        (async() => {
-            await getDataUrl()
-            await UserprofileInfo()
-        })();
-    },[])
+        if(isFocused)
+        {
+            (async() => {
+                await getDataUrl()
+                await UserprofileInfo()
+            })();
+        }
+
+    },[isFocused])
 
     const UserprofileInfo = async() => {
         const userRef = doc(db,"users",user.uid);
