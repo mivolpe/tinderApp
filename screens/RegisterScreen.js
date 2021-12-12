@@ -1,9 +1,9 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react'
-import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import {useNavigation} from '@react-navigation/core';
+import React, {useState} from 'react'
+import {View, Text, ScrollView, Image, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import tw from 'tailwind-rn'
 import useAuth from '../hooks/useAuth';
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 import * as Yup from 'yup';
 
 const LoginSchema = Yup.object().shape({
@@ -19,44 +19,29 @@ const LoginSchema = Yup.object().shape({
 const RegisterScreen = () => {
 
     const navigation = useNavigation();
-    const { registerWithEmailPassword, loginWithEmailPassword } = useAuth(); 
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [type,setType] = useState(null);
-
-    const registerUser = (() => {
-        registerWithEmailPassword(email, password);
-    })
-
-    const loginUser = (() => {
-        loginWithEmailPassword(email,password);
-    })
-
-
+    const {registerWithEmailPassword, loginWithEmailPassword} = useAuth();
+    const [type, setType] = useState(null);
 
     return (
         <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{email: '', password: ''}}
             validationSchema={LoginSchema}
             onSubmit=
-            {   values => 
-             { if(type === "register")
-                {
-                    registerWithEmailPassword(values.email,values.password)
-                } else
-                {
-                    loginWithEmailPassword(values.email,values.password)
-                }
-             }
-            }
+                {values => {
+                    if (type === "register") {
+                        registerWithEmailPassword(values.email, values.password)
+                    } else {
+                        loginWithEmailPassword(values.email, values.password)
+                    }
+                }}
         >
-            {( props ) => (
+            {(props) => (
                 <ScrollView style={tw("flex-1")}>
                     <View style={tw("flex-1 items-center pt-1")}>
                         <Image
                             style={tw("h-32 w-full mb-24")}
                             resizeMode="contain"
-                            source={{ uri: "https://links.papareact.com/2pf" }}
+                            source={{uri: "https://links.papareact.com/2pf"}}
                         />
                         <KeyboardAvoidingView>
                             <TextInput
@@ -68,10 +53,10 @@ const RegisterScreen = () => {
                                 placeholder="Enter Your Email"
                             />
                             {props.errors.email && props.touched.email ? (
-                            <Text style={tw("text-red-600 font-bold ")}>
-                                {props.errors.email}
-                            </Text>
-                            ): null }
+                                <Text style={tw("text-red-600 font-bold ")}>
+                                    {props.errors.email}
+                                </Text>
+                            ) : null}
                             <TextInput
                                 value={props.values.password}
                                 onChangeText={props.handleChange('password')}
@@ -84,25 +69,28 @@ const RegisterScreen = () => {
                                 <Text style={tw("text-red-600 font-bold")}>
                                     {props.errors.password}
                                 </Text>
-                            ): null }
+                            ) : null}
                             <TouchableOpacity
                                 style={tw("w-64 p-3 rounded-xl bottom-0 mt-8 mb-5 bg-red-400")}
-                                onPress= {props.handleSubmit}
+                                onPress={() => {
+                                    props.handleSubmit()
+                                    setType("login")
+                                }
+                                }
                             >
                                 <Text style={tw("text-center text-white text-xl")}>Login</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={tw("w-64 p-3 rounded-xl bottom-0 bg-white")}
-                                onPress= {()=> 
-                                    {
-                                        props.handleSubmit , 
-                                        setType("register")
-                                    }
+                                onPress={() => {
+                                    props.handleSubmit()
+                                    setType("register")
+                                }
                                 }
                             >
                                 <Text
                                     style={tw("text-center text-white text-xl text-red-400")}>
-                                Register</Text>
+                                    Register</Text>
                             </TouchableOpacity>
                         </KeyboardAvoidingView>
                     </View>

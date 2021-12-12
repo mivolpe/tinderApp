@@ -60,6 +60,8 @@ export const AuthProvider = ({ children }) => {
             await createUserWithEmailAndPassword(auth,email, password)
         } catch (e) {
             console.log(e);
+            alert("email already in use")
+
         }
     }
 

@@ -5,7 +5,7 @@ import { Foundation, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/core';
 
 
-const Header = ({ title, callEnabled }) => {
+const Header = ({ title }) => {
     const navigation = useNavigation();
     return (
         <View style={tw("p-2 flex-row items-center justify-between")}>
@@ -15,12 +15,6 @@ const Header = ({ title, callEnabled }) => {
                 </TouchableOpacity>
                 <Text style={tw("text-2xl font-bold pl-2")}>{title}</Text>
             </View>
-
-            {callEnabled && (
-                <TouchableOpacity style={tw("rounded-full mr-4 p-3 bg-red-200")} >
-                    <Foundation style={tw("")} name="telephone" size={20} color="red"/>
-                </TouchableOpacity>
-            )}
         </View>
     )
 }

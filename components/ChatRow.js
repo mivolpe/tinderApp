@@ -29,7 +29,7 @@ const ChatRow = ({ matchDetails }) => {
                 source={{ uri: matchedUserInfo?.photoUrl }}
             />
             <Text>
-                {matchedUserInfo.displayName}
+                {matchedUserInfo?.displayName}
             </Text>
         </TouchableOpacity>
     )
