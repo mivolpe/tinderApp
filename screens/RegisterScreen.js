@@ -5,20 +5,20 @@ import tw from 'tailwind-rn'
 import useAuth from '../hooks/useAuth';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {IMLocalized} from "../config/i18n";
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
-        .email('Invalid email')
-        .required('Required'),
+        .email(IMLocalized('error_email'))
+        .required(IMLocalized('error_email_required')),
     password: Yup.string()
-        .min(6, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
+        .min(6, IMLocalized('error_password_short'))
+        .max(30, IMLocalized('error_password_long'))
+        .required(IMLocalized('error_password_required')),
 });
 
 const RegisterScreen = () => {
 
-    const navigation = useNavigation();
     const {registerWithEmailPassword, loginWithEmailPassword} = useAuth();
     const [type, setType] = useState(null);
 
@@ -50,7 +50,7 @@ const RegisterScreen = () => {
                                 onBlur={props.handleBlur('email')}
                                 value={props.values.email}
                                 style={tw("text-left border-b-2 text-xl pb-2 w-64 mb-1")}
-                                placeholder="Enter Your Email"
+                                placeholder={IMLocalized('placeholder_email')}
                             />
                             {props.errors.email && props.touched.email ? (
                                 <Text style={tw("text-red-600 font-bold ")}>
@@ -63,7 +63,7 @@ const RegisterScreen = () => {
                                 onBlur={props.handleBlur('password')}
                                 secureTextEntry={true}
                                 style={tw("text-left border-b-2 text-xl pb-2 w-64 mt-8")}
-                                placeholder="Enter Your Password"
+                                placeholder={IMLocalized('placeholder_password')}
                             />
                             {props.errors.password && props.touched.password ? (
                                 <Text style={tw("text-red-600 font-bold")}>
@@ -75,10 +75,9 @@ const RegisterScreen = () => {
                                 onPress={() => {
                                     props.handleSubmit()
                                     setType("login")
-                                }
-                                }
+                                }}
                             >
-                                <Text style={tw("text-center text-white text-xl")}>Login</Text>
+                                <Text style={tw("text-center text-white text-xl")}>{IMLocalized('btn_login')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={tw("w-64 p-3 rounded-xl bottom-0 bg-white")}
@@ -90,7 +89,7 @@ const RegisterScreen = () => {
                             >
                                 <Text
                                     style={tw("text-center text-white text-xl text-red-400")}>
-                                    Register</Text>
+                                    {IMLocalized('btn_register')}</Text>
                             </TouchableOpacity>
                         </KeyboardAvoidingView>
                     </View>

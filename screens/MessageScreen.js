@@ -9,6 +9,7 @@ import SenderMessage from '../components/SenderMessage'
 import ReceiverMessage from '../components/ReceiverMessage'
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from '@firebase/firestore'
 import { db } from '../firebase'
+import {IMLocalized} from "../config/i18n";
 
 
 const MessageScreen = () => {
@@ -67,15 +68,14 @@ const MessageScreen = () => {
                 <View style={tw("flex-row justify-between items-center border-t border-gray-200 px-5 py-2")}>
                     <TextInput
                         style={tw("h-10 text-lg")}
-                        placeholder="Send Message..."
+                        placeholder={IMLocalized('placeholder_message')}
                         onChangeText={setInput}
                         onSubmitEditing={sendMessage}
                         value={input}
                     />
-                    <Button onPress={sendMessage} title="Send" color="#FF5864" />
+                    <Button onPress={sendMessage} title={IMLocalized('btn_send')} color="#FF5864" />
                 </View>
                 </KeyboardAvoidingView>
-
         </SafeAreaView>
     )
 }

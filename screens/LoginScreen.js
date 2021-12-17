@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useLayoutEffect } from 'react'
-import { View, Text, Button, ImageBackground, TouchableOpacity, Image } from 'react-native'
+import {View, Text, Button, ImageBackground, TouchableOpacity, Image, LogBox} from 'react-native'
 import useAuth from '../hooks/useAuth'
 import tw from 'tailwind-rn';
+import {IMLocalized} from "../config/i18n";
 
 const LoginScreen = () => {
     const { signInWithGoogle, loading } = useAuth();
@@ -35,8 +36,8 @@ const LoginScreen = () => {
                     <Text 
                         style={tw("font-semibold text-center")}
                         onPress={signInWithGoogle}
-                    > 
-                        Login with Google
+                    >
+                        {IMLocalized('login_google')}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
@@ -48,8 +49,8 @@ const LoginScreen = () => {
                     <Text 
                         style={tw("font-semibold text-center")}
                         onPress={() => navigation.navigate("Register")}
-                    > 
-                        Login with Email
+                    >
+                        {IMLocalized('login_email')}
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>

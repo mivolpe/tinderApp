@@ -1,28 +1,29 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, Image } from 'react-native';
+import { View, Text,TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useAuth from '../hooks/useAuth';
 import tw from 'tailwind-rn';
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, DocumentSnapshot, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from '@firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from '@firebase/firestore';
 import { db } from '../firebase';
 import generateId from '../lib/generateId';
 import requestUser from '../services/RequestUser'
-import { LogBox } from 'react-native';
 import {useIsFocused} from "@react-navigation/native";
+import useNotification from "../hooks/useNotification";
+import RequestExpoAPI from "../services/RequestExpoAPI";
+import {IMLocalized} from '../config/i18n'
+
 
 const HomeScreen = () => {
     const navigation = useNavigation();
-    const { user,logout, registerWithEmailPassword } = useAuth();
+    const { user,logout } = useAuth();
     const [profiles, setProfiles] = useState([]);
     const [latitude, setLatitude] = useState()
     const [longitude, setLongitude] = useState()
     const [image, setImage] = useState()
-
-    LogBox.ignoreLogs(['Setting a timer']);
-    LogBox.ignoreLogs(['AsyncStorage has been extracted from ']);
+    const {expoPushToken} = useNotification()
 
     const swipeRef = useRef(null);
 
@@ -35,6 +36,17 @@ const HomeScreen = () => {
             }
         });
    }, []);
+
+    useEffect(() => {
+        if(expoPushToken)
+        {
+            (async() => {
+                await setDoc(doc(db, "user_mobile", user.uid),{
+                    token: expoPushToken
+                })
+            })()
+        }
+    },[expoPushToken])
 
    useEffect(() => {
        if(isFocused) {
@@ -55,7 +67,7 @@ const HomeScreen = () => {
                const swipedUserIds = swipes.length > 0 ? swipes : ["test"];
 
 
-               unsub = onSnapshot(query(collection(db, "users"), where("id", "not-in", [...passedUserIds, ...swipedUserIds])), (snapshot) => {
+               unsub = onSnapshot(query(collection(db, "users")), (snapshot) => {
                    setProfiles(
                        snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
                            id: doc.id,
@@ -84,6 +96,9 @@ const HomeScreen = () => {
 
         const userSwiped = profiles[cardIndex];
         const loggedInProfile = await(await getDoc(doc(db, "users", user.uid))).data();
+        const deviceUserSwiped = await(await getDoc(doc(db,"user_mobile",userSwiped.id))).data();
+        console.log(deviceUserSwiped.token)
+        await RequestExpoAPI.sendAPILike(deviceUserSwiped.token);
 
         getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then((DocumentSnapshot) => {
             if (DocumentSnapshot.exists()) {
@@ -98,7 +113,7 @@ const HomeScreen = () => {
                     userMatched: [user.uid, userSwiped.id],
                     timestamp: serverTimestamp(),
                 });
-
+                RequestExpoAPI.sendAPIMatch(deviceUserSwiped.token);
                 navigation.navigate("Match", {
                     loggedInProfile,
                     userSwiped,
@@ -144,7 +159,7 @@ const HomeScreen = () => {
     };
 
     const createUser = async() =>{
-        await requestUser.getUser(registerWithEmailPassword)
+        await requestUser.getUser()
     }
 
     return (
@@ -202,7 +217,7 @@ const HomeScreen = () => {
                     }}
                     overlayLabels={{
                         left: {
-                            title: "NOPE",
+                            title: IMLocalized('no'),
                             style: {
                                 label: {
                                     textAlign: "right",
@@ -211,7 +226,7 @@ const HomeScreen = () => {
                             },
                         },
                         right: {
-                            title: "LIKE",
+                            title: IMLocalized('like'),
                             style: {
                                 label: {
                                     color: "green",
@@ -256,7 +271,7 @@ const HomeScreen = () => {
                             <Text
                                 style={tw("font-bold pb-5")}
                             >
-                                No more profiles
+                                {IMLocalized('no_profile')}
                             </Text>
                             <Image
                                 style={tw("h-20 w-20")}

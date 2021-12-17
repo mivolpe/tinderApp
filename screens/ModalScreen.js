@@ -9,19 +9,20 @@ import getPosUser from "../services/GetPosUser";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {useIsFocused} from "@react-navigation/native";
+import {IMLocalized} from "../config/i18n";
 
 const ModalSchema = Yup.object().shape({
     name: Yup.string()
-        .min(3, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
+        .min(3, IMLocalized('error_name_short'))
+        .max(30, IMLocalized('error_name_long'))
+        .required(IMLocalized('error_name_required')),
     job: Yup.string()
-        .min(6, 'Too Short!')
-        .max(30, 'Too Long!')
-        .required('Required'),
+        .min(3, IMLocalized('error_job_short'))
+        .max(30, IMLocalized('error_job_long'))
+        .required(IMLocalized('error_job_required')),
     age: Yup.number()
-        .min(2, 'Too Short!')
-        .required('Required'),
+        .min(18, IMLocalized('error_age_min'))
+        .required(IMLocalized('error_age_required')),
 
 });
 
@@ -117,28 +118,28 @@ const ModalScreen = () => {
                         />
 
                         <Text style={tw("text-xl text-gray-500 p-2 font-bold")}>
-                            Update your profile
+                            {IMLocalized('modal_title')}
                         </Text>
 
                         <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                            Step 1: The Pics
+                            {IMLocalized('step1_pic')}
                         </Text>
                         <TouchableOpacity
                             onPress={() => navigation.navigate("UploadImages")}
                         >
                             <Text style={tw("font-bold bg-red-400 text-white p-4 border-2 text-xl rounded-lg")}>
-                                upload Images
+                                {IMLocalized('btn_upload_image')}
                             </Text>
                         </TouchableOpacity>
                         <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                            Step 2: The name
+                            {IMLocalized('step2_name')}
                         </Text>
                         <TextInput
                             onChangeText={props.handleChange('name')}
                             onBlur={props.handleBlur('name')}
                             value={props.values.name}
                             style={tw("text-center text-xl pb-2")}
-                            placeholder="Enter your name"
+                            placeholder={IMLocalized('placeholder_name')}
                         />
                         {props.errors.name && props.touched.name ? (
                             <Text style={tw("text-red-600 font-bold ")}>
@@ -146,14 +147,14 @@ const ModalScreen = () => {
                             </Text>
                         ): null }
                         <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                            Step 3: The Job
+                            {IMLocalized('step3_job')}
                         </Text>
                         <TextInput
                             onChangeText={props.handleChange('job')}
                             onBlur={props.handleBlur('job')}
                             value={props.values.job}
                             style={tw("text-center text-xl pb-2")}
-                            placeholder="Enter your occupation"
+                            placeholder={IMLocalized('placeholder_job')}
                         />
                         {props.errors.job && props.touched.job ? (
                             <Text style={tw("text-red-600 font-bold ")}>
@@ -161,14 +162,14 @@ const ModalScreen = () => {
                             </Text>
                         ): null }
                         <Text style={tw("text-center p-4 font-bold text-red-400")}>
-                            Step 4: The Age
+                            {IMLocalized('step4_age')}
                         </Text>
                         <TextInput
                             onChangeText={props.handleChange('age')}
                             onBlur={props.handleBlur('age')}
                             value={props.values.age}
                             style={tw("text-center text-xl ")}
-                            placeholder="Enter your age"
+                            placeholder={IMLocalized('placeholder_age')}
                             keyboardType="numeric"
                             maxLength={2}
                         />
@@ -181,7 +182,7 @@ const ModalScreen = () => {
                             style={tw("w-64 p-3 rounded-xl bg-red-400 mt-5")}
                             onPress={props.handleSubmit}
                         >
-                            <Text style={tw("text-center text-white  text-xl")}>Update Profile</Text>
+                            <Text style={tw("text-center text-white  text-xl")}>{IMLocalized('btn_update')}</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

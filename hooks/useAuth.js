@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import * as Google from "expo-google-app-auth";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signInWithEmailAndPassword, signOut } from '@firebase/auth';
 import { auth } from '../firebase';
+import {IMLocalized} from "../config/i18n";
 
 const AuthContext = createContext({});
 
@@ -60,7 +61,7 @@ export const AuthProvider = ({ children }) => {
             await createUserWithEmailAndPassword(auth,email, password)
         } catch (e) {
             console.log(e);
-            alert("email already in use")
+            alert(IMLocalized('email_used'))
 
         }
     }
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         try{
             await signInWithEmailAndPassword(auth, email, password);
         } catch (e) {
-            alert("Invalid email or password")
+            alert(IMLocalized('email_password_error'))
             console.log(e);
         }
     }

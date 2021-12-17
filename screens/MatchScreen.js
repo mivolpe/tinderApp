@@ -2,6 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/core'
 import React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import tw from 'tailwind-rn'
+import {IMLocalized} from "../config/i18n";
 
 const MatchScreen = () => {
     const navigation = useNavigation();
@@ -18,7 +19,7 @@ const MatchScreen = () => {
                 />
             </View>
             <Text style={tw("text-white text-center mt-5")}>
-                You and {userSwiped.displayName} have liked each other.
+                {IMLocalized('match_message',{name:userSwiped.displayName})}
             </Text>
 
             <View style={tw("flex-row justify-evenly mt-5")}>
@@ -39,7 +40,7 @@ const MatchScreen = () => {
                 }}
             >
                 <Text  style={tw("text-center")}>
-                    Send a Message
+                    {IMLocalized('match_message')}
                 </Text>
             </TouchableOpacity>
 

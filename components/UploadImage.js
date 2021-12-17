@@ -4,6 +4,7 @@ import tw from 'tailwind-rn';
 import { AntDesign, Fontisto} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import ActionSheet from 'react-native-actions-sheet';
+import {IMLocalized} from "../config/i18n";
 
 export default function UploadImage({image, setImage, index}) {
 
@@ -59,7 +60,7 @@ export default function UploadImage({image, setImage, index}) {
                 />
                 }
                 <View style={tw("absolute bottom-0 items-center m-1")}>
-                    <Text style={tw("font-bold")}>{image ? '' : 'Upload Image'}</Text>
+                    <Text style={tw("font-bold ml-4")}>{image ? '' : IMLocalized('upload_image')}</Text>
                 </View>
             </TouchableOpacity>
             <ActionSheet 
@@ -70,21 +71,21 @@ export default function UploadImage({image, setImage, index}) {
                 <View>
                     <TouchableOpacity onPress={addImageLib} style={tw("flex-row items-center")}>
                         <Text style={tw("text-lg py-4 border-b-2")}>
-                            Open Gallery
+                            {IMLocalized('open_gallery')}
                         </Text>
                         <Fontisto name="picture" size={20} />
 
                     </TouchableOpacity>
                     <TouchableOpacity onPress={addImageCam} style={tw("flex-row items-center")}>
                         <Text style={tw("text-lg py-4 border-b-2")}>
-                            Open Camera  
+                            {IMLocalized('open_camera')}
                         </Text>
                         <AntDesign name="camera" size={20} />
 
                     </TouchableOpacity>
                     <TouchableOpacity onPress={Cancel}>
                         <Text style={tw("text-xl text-red-500 py-4 text-center font-bold")}>
-                            Cancel
+                            {IMLocalized('ancel')}
                         </Text>
                     </TouchableOpacity>
                 </View>

@@ -7,6 +7,7 @@ import useAuth from '../hooks/useAuth';
 import {collection, doc, getDoc, getDocs, setDoc} from "@firebase/firestore";
 import {db} from "../firebase";
 import {useNavigation} from "@react-navigation/core";
+import {IMLocalized} from "../config/i18n";
 
 const UploadImagesScreen = () => {
     useEffect(() => {
@@ -76,7 +77,7 @@ const UploadImagesScreen = () => {
   }
     return (
         <View style={tw("flex-1 items-center pt-5")}>
-          <Text style={tw("text-center text-3xl font-bold p-5")}>Upload Images</Text>
+          <Text style={tw("text-center text-3xl font-bold p-5")}>{IMLocalized('upload_image_title')}</Text>
           <View style={tw("flex-row flex-wrap justify-evenly")}>
             {images.map((_, index) => <UploadImage setImage={setImage} index={index} image={images[index]} key={index}/>)}
           </View>
@@ -84,7 +85,7 @@ const UploadImagesScreen = () => {
             style={tw("w-64 p-3 rounded-xl absolute bottom-10 bg-red-400")}
             onPress={uploadImage}
             >
-            <Text style={tw("text-center text-white text-xl")}>Save</Text>
+            <Text style={tw("text-center text-white text-xl")}>{IMLocalized('save')}</Text>
           </TouchableOpacity>
         </View>
     )

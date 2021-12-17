@@ -5,6 +5,7 @@ import tw from 'tailwind-rn'
 import { db } from '../firebase';
 import useAuth from '../hooks/useAuth';
 import ChatRow from "../components/ChatRow"
+import {IMLocalized} from "../config/i18n";
 
 
 const ChatList = () => {
@@ -34,7 +35,7 @@ const ChatList = () => {
             />
         ) : (
             <View style={tw("p-5")}>
-                <Text style={tw("text-center text-lg")}>No matches at the moment </Text>
+                <Text style={tw("text-center text-lg")}>{IMLocalized('no_matches')} </Text>
             </View>
         )
     )
