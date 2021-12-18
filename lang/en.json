@@ -29,6 +29,7 @@
   "error_age_required": "Age is required !",
   "placeholder_email": "Enter Your Email",
   "placeholder_password": "Enter Your Password",
+  "btn_login": "Login",
   "btn_register": "Register",
   "error_email": "Enter a valid email address",
   "error_email_required": "The email address is required !",
@@ -47,7 +48,9 @@
   "notif_like_title": "You receive a like",
   "notif_like_body": "Someone liked your profile !",
   "notif_match_title": "You have a match",
-  "notif_match_body": "Congratulations ! You have a new match !"
+  "notif_match_body": "Congratulations ! You have a new match !",
+  "forgot_password": "Forgot Password ?",
+  "send_email": "Send Email"
 
 
 }

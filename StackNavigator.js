@@ -10,6 +10,7 @@ import ModalScreen from './screens/ModalScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { LogBox } from 'react-native';
 import UploadImagesScreen from './screens/UploadImagesScreen';
+import PasswordForgotScreen from './screens/PasswordForgotScreen';
 
 
 
@@ -45,6 +46,7 @@ const StackNavigator = () => {
                 <>
                     <Stack.Screen name="Login" component={LoginScreen}/>
                     <Stack.Screen name="Register" component={RegisterScreen}/>
+                    <Stack.Screen name="Forgot" component={PasswordForgotScreen}/>
                 </>
             )}
         </Stack.Navigator>

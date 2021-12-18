@@ -48,5 +48,7 @@
   "notif_like_title": "Vous avez reçu un j'aime",
   "notif_like_body": "Quelqu'un a aimé votre profil !",
   "notif_match_title": "Vous avez un match",
-  "notif_match_body": "Félicitation ! Vous avez un nouveau match !"
+  "notif_match_body": "Félicitation ! Vous avez un nouveau match !",
+  "forgot_password": "Mot de passe oublié ?",
+  "send_email": "Envoyer l'émail"
 }

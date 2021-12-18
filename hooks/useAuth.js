@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as Google from "expo-google-app-auth";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signInWithEmailAndPassword, signOut } from '@firebase/auth';
+import {
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    signInWithCredential,
+    signInWithEmailAndPassword,
+    signOut
+} from '@firebase/auth';
 import { auth } from '../firebase';
 import {IMLocalized} from "../config/i18n";
 
@@ -75,6 +83,14 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const passwordReset = async(email) =>{
+        try{
+            await sendPasswordResetEmail(auth, email);
+        } catch(e){
+            alert(IMLocalized('email_password_error'))
+        }
+    }
+
 
     const memoedValue = useMemo(() => ({
         user,
@@ -83,6 +99,7 @@ export const AuthProvider = ({ children }) => {
         signInWithGoogle,
         registerWithEmailPassword,
         loginWithEmailPassword,
+        passwordReset,
         logout, 
     }), [user, loading, error])
 

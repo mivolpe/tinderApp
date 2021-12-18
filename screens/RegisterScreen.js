@@ -21,6 +21,7 @@ const RegisterScreen = () => {
 
     const {registerWithEmailPassword, loginWithEmailPassword} = useAuth();
     const [type, setType] = useState(null);
+    const navigation = useNavigation();
 
     return (
         <Formik
@@ -90,6 +91,14 @@ const RegisterScreen = () => {
                                 <Text
                                     style={tw("text-center text-white text-xl text-red-400")}>
                                     {IMLocalized('btn_register')}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={tw("mt-7")}
+                                onPress={() => navigation.navigate("Forgot")}
+                            >
+                                <Text style={tw("text-center text-blue-400")}>
+                                    {IMLocalized('forgot_password')}
+                                </Text>
                             </TouchableOpacity>
                         </KeyboardAvoidingView>
                     </View>

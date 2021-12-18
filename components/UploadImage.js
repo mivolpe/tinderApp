@@ -85,7 +85,7 @@ export default function UploadImage({image, setImage, index}) {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={Cancel}>
                         <Text style={tw("text-xl text-red-500 py-4 text-center font-bold")}>
-                            {IMLocalized('ancel')}
+                            {IMLocalized('cancel')}
                         </Text>
                     </TouchableOpacity>
                 </View>

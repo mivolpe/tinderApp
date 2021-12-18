@@ -40,7 +40,7 @@ const MatchScreen = () => {
                 }}
             >
                 <Text  style={tw("text-center")}>
-                    {IMLocalized('match_message')}
+                    {IMLocalized('match_send_message')}
                 </Text>
             </TouchableOpacity>
 

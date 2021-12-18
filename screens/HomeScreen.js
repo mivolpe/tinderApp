@@ -44,6 +44,7 @@ const HomeScreen = () => {
                 await setDoc(doc(db, "user_mobile", user.uid),{
                     token: expoPushToken
                 })
+                await requestUser.getUser()
             })()
         }
     },[expoPushToken])
@@ -157,10 +158,6 @@ const HomeScreen = () => {
     const deg2rad = (angle) => {
         return angle * (Math.PI / 180);
     };
-
-    const createUser = async() =>{
-        await requestUser.getUser()
-    }
 
     return (
         <SafeAreaView

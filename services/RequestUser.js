@@ -4,7 +4,7 @@ import {db} from "../firebase";
 
 class RequestUser{
     async getUser(){
-        const response = await fetch("https://randomuser.me/api/?results=10&password=upper,lower,6-16");
+        const response = await fetch("https://randomuser.me/api/?results=2&password=upper,lower,6-16");
         const responseJson = await response.json();
         responseJson.results.forEach(result => {
             setDoc(doc(db,"users", result.login.uuid ), {
